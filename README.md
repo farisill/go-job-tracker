@@ -1,11 +1,7 @@
 # go-job-tracker
 
-Hi there!
+Job Radar is a browser extension that helps you browse LinkedIn job postings more easily. It checks each job card for your chosen keywords and highlights the ones that are relevant to you. It’s a simple way to filter through listings and quickly notice roles that match your interests.
 
-This is a Job Tracker project for educational purposes.
+The extension is currently being designed and tested for Firefox.
 
-If you find my bot bothering or not well-behaving, my apologies. My intent is not ill, I'm just learning some Golang features for the university.
-
-So, if it's the case, just drop me a message and I tell the bot to leave your website alone.
-
-May whoever is reading this have a nice day
+The project is entirely written with Claude.
