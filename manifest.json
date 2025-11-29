@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "Match Keywords",
+  "version": "1.0",
+  "description": "Automatically fetch <p dir='ltr'> text on LinkedIn pages",
+  "permissions": ["downloads", "tabs", "activeTab", "storage"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/enabled.png",
+      "48": "icons/enabled.png",
+      "128": "icons/enabled.png"
+    },
+    "default_title": "Toggle LinkedIn Keyword Matcher",
+    "default_popup": "popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.linkedin.com/*"],
+      "js": ["content.js"],
+      "css": ["content-styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+/* Keyword Matcher Styles for H1 */
+
+.is-match {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+}
+
+.is-match::after {
+  content: " *MATCH*";
+  margin-left: 12px;
+  font-weight: bold;
+  font-size: 0.85em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #000000;
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.is-not-match {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+.is-not-match::after {
+  content: " *NOT A MATCH*";
+  margin-left: 12px;
+  font-weight: bold;
+  font-size: 0.85em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #000000;
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Keyword Matcher Styles for Job Card Container (DIV) */
+
+.job-card-match {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+}
+
+.job-card-no-match {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Keyword Matcher Styles for Strong Element */
+
+.strong-match::after {
+  content: " *MATCH*";
+  margin-left: 8px;
+  font-weight: bold;
+  font-size: 0.85em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #000000;
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.strong-no-match::after {
+  content: " *NOT A MATCH*";
+  margin-left: 8px;
+  font-weight: bold;
+  font-size: 0.85em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #000000;
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.waiting-for-scan {
+  border: 2px dotted grey !important;
+}
