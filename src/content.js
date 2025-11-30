@@ -106,11 +106,15 @@
     
     // Send job count only once when page is fully loaded
     let countSent = false;
+    // Persisted in-page count for the popup to retrieve later (session-only)
+    let savedJobCount = 0;
     
     function sendJobCountOnce() {
       if (countSent) return;
       
       const count = countJobs();
+      // Save the computed count so popup can ask for it later
+      savedJobCount = count;
       if (count > 0) {
         browserAPI.runtime.sendMessage({ type: "UPDATE_JOB_COUNT", count: count });
         countSent = true;
@@ -133,6 +137,13 @@
         sendJobCountOnce();
       }
     }, 3000);
+
+    // Allow other parts (popup) to ask for the current job count
+    browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message && message.type === 'GET_JOB_COUNT') {
+        sendResponse({ count: savedJobCount || 0 });
+      }
+    });
 
     browserAPI.storage.local.get(["scraperEnabled", "keywords"]).then((result) => {
       const enabled = result.scraperEnabled !== false;
@@ -422,7 +433,7 @@
       
       // Show alert with count
       const count = jobUrls.length;
-      const confirmed = confirm(`Matches found: ${count}\nWould you like to open all matches in new tabs?`);
+      const confirmed = confirm(`Would you like to open all the ${count} matches in new tabs?\n\nIMPORTANT: The tabs will open with a small delay between each to avoid overwhelming the browser.`);
       
       if (confirmed && jobUrls.length > 0) {
         // Send URLs to background script to open tabs

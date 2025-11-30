@@ -160,6 +160,42 @@ html, body {
   background: #1d3f7a;
 }
 
+/* Action row layout for Download/Flush pair */
+.action-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Ensure action-row children don't expand to 100% (single column) */
+.action-row .btn {
+  width: auto;
+}
+
+/* Download takes 2/3 width; Flush takes 1/3 */
+.btn-download {
+  flex: 2;
+}
+
+.btn-flush {
+  flex: 1;
+  background: #f87171; /* light red*/
+  color: #fff;
+}
+
+.btn-flush:hover {
+  background: #ef4444;
+}
+
+.btn-flush:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f87171;
+}
+
+/* Open-row layout (Open All Jobs + Cancel) */
+/* open-row removed (cancellation removed) */
+
 /* Preformatted text */
 pre {
   background: #e5e7eb;

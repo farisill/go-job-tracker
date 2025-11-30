@@ -12,7 +12,12 @@
     <h1 class="title">Job Seeker Tool</h1>
 
     <button id="search-keywords-btn" class="btn">Keyword Radar</button>
-    <button id="downloadMatchesBtn" class="btn">Download (0) Matches</button>
+
+    <!-- Downloads & Flush buttons (Download 2/3 width, Flush 1/3 width) -->
+    <div class="action-row">
+      <button id="downloadMatchesBtn" class="btn btn-download">Download (0) Matches</button>
+      <button id="flushMatchesBtn" class="btn btn-flush" disabled>Flush!</button>
+    </div>
     
     <!-- Job Counter -->
     <div id="job-counter" class="job-counter">0 Job(s) Found</div>
@@ -26,9 +31,9 @@
     <div class="modal-content">
       <span id="keywords-close" class="close">&times;</span>
       <h3>Set Keywords</h3>
-      <label for="keywords-input">Enter keywords (comma separated):</label>
+      <label for="keywords-input">Enter keywords (comma separated)<br><strong>Reload</strong> page after save</label>
       <input type="text" id="keywords-input" placeholder="e.g., JavaScript, Python, Remote">
-      <button id="keywords-save-btn" class="btn">Save Keywords</button>
+      <button id="keywords-save-btn" class="btn">Save</button>
     </div>
   </div>
 

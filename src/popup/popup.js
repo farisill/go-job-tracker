@@ -16,6 +16,7 @@ const searchKeywordsBtn = document.getElementById("search-keywords-btn");
 const openJobsBtn = document.getElementById("open-jobs-btn");
 const setKeywordsBtn = document.getElementById("set-keywords-btn");
 const downloadBtn = document.getElementById('downloadMatchesBtn');
+const flushBtn = document.getElementById('flushMatchesBtn');
 const jobCounter = document.getElementById('job-counter');
 
 const keywordsModal = document.getElementById("keywords-modal");
@@ -77,12 +78,42 @@ runtimeAPI.onMessage.addListener((message) => {
   if (message.type === "UPDATE_JOB_COUNT") {
     updateJobCounter(message.count);
   }
+  else if (message.type === 'OPEN_JOB_TABS_STATUS') {
+    // Handle background status updates for opening job tabs
+    if (message.status === 'started') {
+      // disable open button while opening
+      if (openJobsBtn) openJobsBtn.disabled = true;
+      if (openJobsBtn) openJobsBtn.classList.add('disabled');
+    } else if (message.status === 'progress') {
+      // optional: update UI about progress
+      // message.opened, message.total
+    } else if (message.status === 'finished') {
+      if (openJobsBtn) openJobsBtn.disabled = false;
+      if (openJobsBtn) openJobsBtn.classList.remove('disabled');
+    }
+  }
 });
 
 // Initialize counter on popup load
 document.addEventListener("DOMContentLoaded", () => {
-  // Counter will be updated when content script sends the count
-  // No need to request it, as the count persists in the display
+  // Request the current job count from the active tab's content script so
+  // the popup shows a persisted value even if it was computed previously.
+  try {
+    tabsAPI.query({ active: true, currentWindow: true }, (tabs) => {
+      const tab = tabs[0];
+      if (!tab || !tab.id) return;
+      tabsAPI.sendMessage(tab.id, { type: 'GET_JOB_COUNT' }, (response) => {
+        if (!response) return;
+        if (typeof response.count === 'number') {
+          updateJobCounter(response.count);
+        }
+      });
+    });
+  } catch (err) {
+    // Not critical: if we can't query the tab, the UPDATE_JOB_COUNT listener
+    // will still update the UI if the content script sends a message.
+    console.warn('Failed to request GET_JOB_COUNT from active tab:', err);
+  }
 });
 
 // =============================================================================
@@ -108,11 +139,14 @@ openJobsBtn.addEventListener("click", async () => {
 
     // Request job extraction from content script
     tabsAPI.sendMessage(tab.id, { action: "EXTRACT_JOB_IDS" });
+    // when content script sends the OPEN_JOB_TABS message to background, we'll get status updates
     
   } catch (err) {
     showAlert("Failed to communicate with the page. Make sure you are on a LinkedIn jobs page.");
   }
 });
+
+// (cancel button removed)
 
 // =============================================================================
 // SET KEYWORDS MODAL
@@ -170,6 +204,18 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // Flush button: clear matches without downloading
+  if (flushBtn) {
+    flushBtn.addEventListener('click', () => {
+      if (flushBtn.disabled) return;
+
+      // Send message to clear matches list in background
+      runtimeAPI.sendMessage({ type: "clear_matches" }, () => {
+        updateDownloadButton();
+      });
+    });
+  }
 });
 
 /**
@@ -188,6 +234,17 @@ function updateDownloadButton() {
     } else {
       downloadBtn.disabled = false;
       downloadBtn.classList.remove('disabled');
+    }
+
+    // Enable or disable the flush button along with download button
+    if (flushBtn) {
+      if (count === 0) {
+        flushBtn.disabled = true;
+        flushBtn.classList.add('disabled');
+      } else {
+        flushBtn.disabled = false;
+        flushBtn.classList.remove('disabled');
+      }
     }
   });
 }
